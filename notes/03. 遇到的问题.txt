@@ -2,6 +2,7 @@
 	原因：properties文件默认编码格式为ISO-8859-1
 	修改方式：Window --> Preferences --> General --> Content Types --> Text --> Java Properties File --> 将Default encoding改为utf-8
 
+
 2. 想要利用mybatis-generator自动生成代码
 	1) 在pom.xml中添加plugin
 		<plugin>
@@ -31,6 +32,8 @@
 		</plugin>
 	2) 新建generatorConfig.xml文件
 		具体内容及各个配置详解见generatorConfig_note.xml
+		
+		
 3. 解决问题2的过程中发现pom.xml中的<execution>标签报错
 	错误信息如下：
 		Plugin execution not covered by lifecycle configuration: org.mybatis.generator:mybatis-generator-maven-plugin:1.3.2:generate (execution: Generate MyBatis Artifacts, phase: generate-sources)
@@ -85,6 +88,8 @@
 	                </plugin>  
 	            </plugins>  
 	        </pluginManagement>
+	        
+	        
 4. 解决问题3后，又出现了Cannot change version of project facet Dynamic web module to 2.3错误
 	解决方式：
 		1)web.xml中2.3改为3.0
@@ -99,8 +104,10 @@
 			    </welcome-file-list>
 			 </web-app>
 		2)在Navigator下打开项目.settings目录下的org.eclipse.jdt.core.prefs --> 把1.5改成1.8
-		3)打开org.eclipse.wst.common.component --> 把project-version="1.5.0"改成project-version="1.6.0"
+		3)打开org.eclipse.wst.common.component --> 把project-version="1.5.0"改成project-version="1.8.0"
 		4)打开org.eclipse.wst.common.project.facet.core.xml --> 把<installed facet="java" version="1.5"/>改成<installed facet="java" version="1.8"/>，把  <installed facet="jst.web" version="2.3"/>改成  <installed facet="jst.web" version="3.0"/>
+
+
 5. 解决问题4后，又出现了Dynamic Web Module 3.0 requires Java 1.6 or newer错误
 	原因：maven update后jre配置变回了1.5
 	解决方式：
@@ -126,16 +133,20 @@
 				      <groupId>org.apache.maven.plugins</groupId>
 				      <artifactId>maven-compiler-plugin</artifactId>
 				      <configuration>
-				        <source>1.7</source>
-				        <target>1.7</target>
+				        <source>1.8</source>
+				        <target>1.8</target>
 				      </configuration>
 				    </plugin>
 				  </plugins>
 				</build>
 				修改完成后maven update
+
+
 6. Run As --> Maven generate-sources时报错java.lang.NoClassDefFoundError: org/mybatis/generator/exception/InvalidConfigurationException
 	解决方式：
 		把org/mybatis/generator下面的jar包删除，然后运行maven重新生成
+
+
 7. Run As --> Maven generate-sources时提示文件夹不存在
 	解决方式：
 		将targetProject="studyssmstudentmanagement/src/main/java"改为targetProject="src/main/java"
