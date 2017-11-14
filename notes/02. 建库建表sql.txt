@@ -1,0 +1,240 @@
+# 新建库
+create database if not exists student_management;
+
+# 查看所有数据库
+show databases;
+
+# 查看系统编码
+show variables like '%character%';
+
+# 查看数据库编码
+show create database student_management;
+
+# 指定数据库
+use student_management;
+
+# 新建学校表
+create table if not exists school
+(
+   id                   varchar(32) not null,
+   name                 varchar(100),
+   created_id           varchar(32),
+   created_time         datetime,
+   updated_id           varchar(32),
+   updated_time         datetime,
+   deleted_flag         bool default 0,
+   primary key (id)
+);
+
+# 查询表的编码
+show create table school;
+
+# 新建楼栋表
+create table if not exists building
+(
+   id                   varchar(32) not null,
+   name                 varchar(100),
+   school_id            varchar(32),
+   created_id           varchar(32),
+   created_time         datetime,
+   updated_id           varchar(32),
+   updated_time         datetime,
+   deleted_flag         bool default 0,
+   primary key (id)
+);
+
+
+# 新建教室表
+create table if not exists classroom
+(
+   id                   varchar(32) not null,
+   name                 varchar(100),
+   building_id          varchar(32),
+   created_id           varchar(32),
+   created_time         datetime,
+   updated_id           varchar(32),
+   updated_time         datetime,
+   deleted_flag         bool default 0,
+   primary key (id)
+);
+
+# 新建年级表
+create table if not exists grade
+(
+   id                   varchar(32) not null,
+   name                 varchar(100),
+   created_id           varchar(32),
+   created_time         datetime,
+   updated_id           varchar(32),
+   updated_time         datetime,
+   deleted_flag         bool default 0,
+   primary key (id)
+);
+
+# 新建班级表
+create table if not exists class
+(
+   id                   varchar(32) not null,
+   name                 varchar(100),
+   grade_id             varchar(32),
+   school_id            varchar(32),
+   created_id           varchar(32),
+   created_time         datetime,
+   updated_id           varchar(32),
+   updated_time         datetime,
+   deleted_flag         bool default 0,
+   primary key (id)
+);
+
+# 新建'课程'表
+create table if not exists course
+(
+   id                   varchar(32) not null,
+   name                 varchar(100),
+   created_id           varchar(32),
+   created_time         datetime,
+   updated_id           varchar(32),
+   updated_time         datetime,
+   deleted_flag         bool default 0,
+   primary key (id)
+);
+
+# 新建'课程表'表
+create table if not exists timetable
+(
+   class_id             varchar(32) not null,
+   course_id            varchar(32) not null,
+   classroom_id         varchar(32) not null,
+   time                 datetime not null,
+   created_id           varchar(32),
+   created_time         datetime,
+   updated_id           varchar(32),
+   updated_time         datetime,
+   deleted_flag         bool default 0,
+   primary key (class_id, course_id, classroom_id, time)
+);
+
+# 新建教师表
+create table if not exists teacher
+(
+   id                   varchar(32) not null,
+   name                 varchar(100),
+   sex                  char(1),
+   age                  int,
+   course_id            varchar(32),
+   created_id           varchar(32),
+   created_time         datetime,
+   updated_id           varchar(32),
+   updated_time         datetime,
+   deleted_flag         bool default 0,
+   primary key (id)
+);
+
+# 新建教师班级关联表
+create table if not exists teacher_class_index
+(
+   id                   varchar(32) not null,
+   class_id             varchar(32),
+   teacher_id           varchar(32),
+   created_id           varchar(32),
+   created_time         datetime,
+   updated_id           varchar(32),
+   updated_time         datetime,
+   deleted_flag         bool default 0,
+   primary key (id)
+);
+
+# 新建考试表
+create table if not exists exam
+(
+   id                   varchar(32) not null,
+   name                 varchar(100),
+   time                 date,
+   created_id           varchar(32),
+   created_time         datetime,
+   updated_id           varchar(32),
+   updated_time         datetime,
+   deleted_flag         bool default 0,
+   primary key (id)
+);
+
+# 新建学生表
+create table if not exists student
+(
+   id                   varchar(32) not null,
+   name                 varchar(100),
+   sex                  char(1),
+   age                  int,
+   class_id             varchar(32),
+   created_id           varchar(32),
+   created_time         datetime,
+   updated_id           varchar(32),
+   updated_time         datetime,
+   deleted_flag         bool default 0,
+   primary key (id)
+);
+
+# 新建成绩表
+create table if not exists score
+(
+   id                   varchar(32) not null,
+   student_id           varchar(32),
+   course_id            varchar(32),
+   exam_id              varchar(32),
+   score                int,
+   created_id           varchar(32),
+   created_time         datetime,
+   updated_id           varchar(32),
+   updated_time         datetime,
+   deleted_flag         bool default 0,
+   primary key (id)
+);
+
+# 添加外键
+/*
+ * CASCADE    删除包含与已删除键值有参照关系的所有记录
+ * SET NULL   修改包含与已删除键值有参照关系的所有记录，使用NULL值替换（只能用于已标记为NOT NULL的字段）
+ * RESTRICT   拒绝删除要求，直到使用删除键值的辅助表被手工删除，并且没有参照时(这是默认设置，也是最安全的设置)
+ * NO ACTION  啥也不做
+ */
+alter table building add constraint FK_Reference_4 foreign key (school_id)
+      references school (id) on delete restrict on update restrict;
+
+alter table class add constraint FK_Reference_1 foreign key (school_id)
+      references school (id) on delete restrict on update restrict;
+
+alter table class add constraint FK_Reference_2 foreign key (grade_id)
+      references grade (id) on delete restrict on update restrict;
+
+alter table classroom add constraint FK_Reference_3 foreign key (building_id)
+      references building (id) on delete restrict on update restrict;
+
+alter table score add constraint FK_Reference_5 foreign key (exam_id)
+      references exam (id) on delete restrict on update restrict;
+
+alter table score add constraint FK_Reference_6 foreign key (student_id)
+      references student (id) on delete restrict on update restrict;
+
+alter table score add constraint FK_Reference_7 foreign key (course_id)
+      references course (id) on delete restrict on update restrict;
+
+alter table student add constraint FK_Reference_8 foreign key (class_id)
+      references class (id) on delete restrict on update restrict;
+
+alter table teacher_class_index add constraint FK_Reference_10 foreign key (class_id)
+      references class (id) on delete restrict on update restrict;
+
+alter table teacher_class_index add constraint FK_Reference_9 foreign key (teacher_id)
+      references teacher (id) on delete restrict on update restrict;
+
+alter table timetable add constraint FK_Reference_11 foreign key (class_id)
+      references class (id) on delete restrict on update restrict;
+
+alter table timetable add constraint FK_Reference_12 foreign key (classroom_id)
+      references classroom (id) on delete restrict on update restrict;
+
+alter table timetable add constraint FK_Reference_13 foreign key (course_id)
+      references course (id) on delete restrict on update restrict;
+
+# 查看表的外键
+show create table timetable;

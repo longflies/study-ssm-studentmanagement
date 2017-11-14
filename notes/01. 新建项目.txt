@@ -1,0 +1,27 @@
+1. 新建一个maven项目
+
+
+2. 设置项目的编码格式为utf-8
+	项目Properties --> Resource
+	
+	
+3. 修改项目用的jre
+	项目Properties --> Java Build Path
+	
+	
+4. pom中引入java EE的jar包
+	<!-- 导入java EE的jar包 -->
+	<dependency>  
+		<groupId>javax</groupId>  
+		<artifactId>javaee-api</artifactId>
+		<!-- 根据jdk版本进行修改 -->
+		<version>8.0</version>  
+	</dependency>
+	
+	
+5. 修改web版本
+	项目Properties --> Project Facets --> java --> 修改版本
+	项目Properties --> Project Facets --> Dynamic Web Module --> 修改版本
+	如果无法修改，则需要去改配置文件（单独改有时会报错，可参考03.遇到的问题.txt中的4）
+		项目下.setting文件夹 --> org.eclipse.wst.common.project.facet.core.xml
+		修改<installed facet="jst.web" version="2.5"/>这句中的version
