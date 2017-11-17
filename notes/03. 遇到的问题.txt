@@ -150,3 +150,35 @@
 7. Run As --> Maven generate-sources时提示文件夹不存在
 	解决方式：
 		将targetProject="studyssmstudentmanagement/src/main/java"改为targetProject="src/main/java"
+		
+		
+8. 使用@Controller注解时提示Controller cannot be resolved to a type，将还没有代码的项目放入tomcat运行，报错如下（省略次要信息）：
+	严重: A child container failed during start
+	java.util.concurrent.ExecutionException: org.apache.catalina.LifecycleException: Failed to initialize component [org.apache.catalina.webresources.JarResourceSet@3d921e20]
+	Caused by: org.apache.catalina.LifecycleException: Failed to initialize component [org.apache.catalina.webresources.JarResourceSet@3d921e20]
+	Caused by: java.lang.IllegalArgumentException: java.util.zip.ZipException: invalid LOC header (bad signature)
+	Caused by: java.util.zip.ZipException: invalid LOC header (bad signature)
+	查找资料后怀疑为jar包有问题：jar包冲突或缺失。
+	解决方式：
+		1. 右击项目 --> Run As --> Maven test  这时控制台会报哪个jar包出错(也可以打开DOS命令窗口，切换至项目目录，运行mvn test命令，和Eclipse的控制台输出信息一致)。
+		2. 如果步骤1不报错，则需要手动对照pom.xml文件和本地仓库jar包是否都正常。
+		
+		
+9. 报错：
+	[org.springframework.web.context.ContextLoader] - Context initialization failed
+  	org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactory' defined in class path resource [spring-mybatis.xml]: Initialization of bean failed; nested exception is org.springframework.beans.TypeMismatchException: Failed to convert property value of type 'java.lang.String' to required type 'org.springframework.core.io.Resource[]' for property 'mapperLocations'; nested exception is java.lang.IllegalArgumentException: Could not resolve resource location pattern [classpath:study/ssm/studentmanagement/mappers/*.xml]: class path resource [study/ssm/studentmanagement/mappers/] cannot be resolved to URL because it does not exist
+  	原因是spring-mybatis.xml中路径配置错误
+  	将
+  		<!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->  
+	    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+	        <property name="dataSource" ref="dataSource" />  
+	        <!-- 自动扫描mapping.xml文件 -->  
+	        <property name="mapperLocations" value="classpath:study/ssm/studentmanagement/mappers/*.xml"></property>  
+	    </bean>
+	改为
+		<!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->  
+	    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+	        <property name="dataSource" ref="dataSource" />  
+	        <!-- 自动扫描mapping.xml文件 -->  
+	        <property name="mapperLocations" value="classpath:mappers/*.xml"></property>  
+	    </bean>
