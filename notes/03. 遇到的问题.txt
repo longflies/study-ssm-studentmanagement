@@ -182,3 +182,10 @@
 	        <!-- 自动扫描mapping.xml文件 -->  
 	        <property name="mapperLocations" value="classpath:mappers/*.xml"></property>  
 	    </bean>
+	    
+	    
+10. 报错：java.lang.ClassNotFoundException: com.mysql.jdbc.Driver  
+	原因是jdbc.properties文件中的配置是复制的，com.mysql.jdbc.Driver后面有空格，所以程序不认识，其他字段也是同样的问题。
+	
+11. 返回的数据是html格式而不是json格式的
+	解决方式：引入jackson相关jar包，Controller的方法上加上@ResponseBody注解即可。
